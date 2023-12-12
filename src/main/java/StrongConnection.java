@@ -1,8 +1,10 @@
 package main.java;
 
-import static java.util.stream.Collectors.toUnmodifiableList;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -15,7 +17,6 @@ import java.util.stream.Collectors;
 public class StrongConnection {
 
   class CharConnection {
-
     char char1;
     char char2;
 
@@ -62,15 +63,15 @@ public class StrongConnection {
    * @return String list containing characters with strong connection.
    * @throws IllegalArgumentException if {@code inputText} is null or empty.
    */
-  public List<String> getStrongestConnection(String inputText) {
-    if (inputText == null || inputText.isEmpty()) {
+  public ImmutableList<String> getStrongestConnection(String inputText) {
+    if (Strings.isNullOrEmpty(inputText)) {
       throw new IllegalArgumentException("Please provide some input text.");
     }
 
     inputText = inputText.toLowerCase(Locale.ROOT);
     List<String> words = Splitter.on(" ").omitEmptyStrings().trimResults().splitToList(inputText);
 
-    List<CharConnection> connections =
+    ImmutableList<CharConnection> connections =
         words.stream()
             .map(
                 word -> {
@@ -82,7 +83,7 @@ public class StrongConnection {
                   return wordConnections;
                 })
             .flatMap(List::stream)
-            .collect(toUnmodifiableList());
+            .collect(toImmutableList());
 
     Map<CharConnection, Long> connectionsMap =
         connections.stream()
@@ -97,6 +98,6 @@ public class StrongConnection {
                     "%s <-> %s : %d",
                     entry.getKey().getChar1(), entry.getKey().getChar2(), entry.getValue()))
         .sorted()
-        .collect(toUnmodifiableList());
+        .collect(toImmutableList());
   }
 }
